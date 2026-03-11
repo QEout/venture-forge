@@ -57,7 +57,7 @@ function formatAssumptionValue(key: string, value: string | number): string {
     return `${(num * 100).toFixed(1)}%`;
   }
   if (key.includes("cost") || key.includes("arpu") || key === "cac" || key === "ltv") {
-    return `$${num.toLocaleString()}`;
+    return `¥${num.toLocaleString()}`;
   }
   return num.toLocaleString();
 }
@@ -168,7 +168,13 @@ export default function Layer2Page() {
 
   useEffect(() => {
     fetchMonteCarlo(ideaId)
-      .then((d) => setData(normalizeMonteCarloData(d)))
+      .then((d) => {
+        const normalized = normalizeMonteCarloData(d);
+        if (normalized) {
+          setData(normalized);
+          setShowChart(true);
+        }
+      })
       .catch(() => {});
   }, [ideaId]);
 
@@ -289,21 +295,21 @@ export default function Layer2Page() {
             <div className="card p-5 text-center">
               <h3 className="pixel-text text-[9px] font-bold text-slate-400 uppercase mb-2">中位现金流</h3>
               <div className={`pixel-text text-3xl font-bold ${data.median_cash_flow > 0 ? "text-emerald-600" : "text-red-500"}`}>
-                <AnimatedNumber value={data.median_cash_flow} prefix="$" />
+                <AnimatedNumber value={data.median_cash_flow} prefix="¥" />
               </div>
               <div className="pixel-text text-[9px] text-slate-400 mt-1">12 个月累计</div>
             </div>
             <div className="card p-5 text-center">
               <h3 className="pixel-text text-[9px] font-bold text-slate-400 uppercase mb-2">最差 10%</h3>
               <div className="pixel-text text-3xl font-bold text-red-500">
-                <AnimatedNumber value={data.p10_cash_flow ?? data.avg_cash_flow * 0.3} prefix="$" />
+                <AnimatedNumber value={data.p10_cash_flow ?? data.avg_cash_flow * 0.3} prefix="¥" />
               </div>
               <div className="pixel-text text-[9px] text-slate-400 mt-1">P10 下行风险</div>
             </div>
             <div className="card p-5 text-center">
               <h3 className="pixel-text text-[9px] font-bold text-slate-400 uppercase mb-2">最好 10%</h3>
               <div className="pixel-text text-3xl font-bold text-emerald-600">
-                <AnimatedNumber value={data.p90_cash_flow ?? data.avg_cash_flow * 1.8} prefix="$" />
+                <AnimatedNumber value={data.p90_cash_flow ?? data.avg_cash_flow * 1.8} prefix="¥" />
               </div>
               <div className="pixel-text text-[9px] text-slate-400 mt-1">P90 上行空间</div>
             </div>
@@ -340,10 +346,10 @@ export default function Layer2Page() {
                     <AreaChart data={data.monthly_trajectory}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                       <XAxis dataKey="month" stroke="#94a3b8" fontSize={11} label={{ value: "月", position: "insideBottomRight", offset: -5 }} />
-                      <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
+                      <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(v: number) => `¥${(v / 1000).toFixed(0)}k`} />
                       <Tooltip
                         contentStyle={{ background: "#fff", border: "1px solid #e2e8f0", boxShadow: "2px 2px 0 rgba(0,0,0,0.06)", fontFamily: "Courier New" }}
-                        formatter={(value) => [`$${Number(value).toLocaleString()}`, ""]}
+                        formatter={(value) => [`¥${Number(value).toLocaleString()}`, ""]}
                       />
                       <Area type="monotone" dataKey="p90" stackId="band" stroke="none" fill="#dcfce7" />
                       <Area type="monotone" dataKey="p10" stackId="band" stroke="none" fill="#ffffff" />

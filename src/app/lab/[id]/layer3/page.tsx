@@ -476,7 +476,7 @@ export default function Layer3Page() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-4">
+          <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
             <div className="card p-4">
               <h4 className="pixel-text text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">模拟概览</h4>
               <div className="space-y-3">
@@ -538,6 +538,18 @@ export default function Layer3Page() {
                 </div>
               </div>
             )}
+
+            {/* Data detail entry */}
+            <button
+              onClick={() => setActiveTab("chart")}
+              className="w-full card p-3 flex items-center justify-between hover:border-blue-300 transition-colors group"
+            >
+              <div className="flex items-center gap-2">
+                <span className="pixel-text text-[10px] font-bold text-blue-600">📊</span>
+                <span className="pixel-text text-[10px] font-bold text-slate-600 group-hover:text-blue-600">查看数据详情</span>
+              </div>
+              <span className="pixel-text text-[10px] text-slate-300 group-hover:text-blue-400">→</span>
+            </button>
 
             {loading && (
               <div className="card p-4 flex items-center gap-3 border-amber-200 bg-amber-50">

@@ -89,8 +89,9 @@ export async function fetchOasisRunDetail(ideaId: string) {
   return res.json();
 }
 
-export async function generatePitchDeck(ideaId: string) {
-  const res = await fetch(`${API_BASE}/api/idea/${ideaId}/generate/pitch_deck`, { method: "POST" });
+export async function generatePitchDeck(ideaId: string, force = false) {
+  const url = `${API_BASE}/api/idea/${ideaId}/generate/pitch_deck${force ? "?force=true" : ""}`;
+  const res = await fetch(url, { method: "POST" });
   if (!res.ok) throw new Error("Generation failed");
   return res.json();
 }
